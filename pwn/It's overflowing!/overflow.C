@@ -21,7 +21,7 @@ void print_flag() {
 int main() {
     int secret = 0xdeadbeef;
     char name[100] = {0};
-    read(0, name, 0x100);
+    read(0, name, 256);
     if (secret == 0x1337) {
         puts("Wow! Here's a secret.\n");
         print_flag();
