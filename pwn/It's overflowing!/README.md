@@ -1,8 +1,24 @@
-Title:
+Title: It's overflowing!
 
-Points: 
+Points: hard
 
-Description: i have a program that gives me the flag if i overwrite the 
+Description: I know the code of the main program, but not the flag function. Help me retrieve the flag pls :) 
+
+Here is the part of the code i know:
+
+    int main() {
+        int secret = 0xdeadbeef;
+        char name[100] = {0};
+        read(0, name, 0x100);
+        if (secret == 0x1337) {
+            puts("Wow! Here's a secret.\n");
+            print_flag();
+        } else {
+            puts("I guess you're not cool enough to see my secret");
+        }
+        return 0; 
+    }
+
 
 Flag: VOSSCTF{pls_dont_overflow_my_buffers}
 
