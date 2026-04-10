@@ -8,4 +8,4 @@ Flag: VOSSCTF{u4xynqsf|u4xynqsg}
 
 Author: Lukas Justin Borge
 
-u4xynqsf
+RB artikkel -> nordby park/parkveien -> google earth lavvo B)
