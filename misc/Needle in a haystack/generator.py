@@ -6,7 +6,7 @@ ROOT_NAME = "challenge_files"
 DEPTH = 4          # How many folders deep
 BREADTH = 5        # How many folders per level
 FILES_PER_DIR = 5  # How many junk files per folder
-FLAG = "CTF{y0u_f0und_th3_n33dl3}"
+FLAG = "VOSSCTF{y0u_f0und_th3_n33dl3}"
 
 def random_string(length=8):
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=length))
@@ -17,11 +17,11 @@ def create_structure(current_path, current_depth):
 
     os.makedirs(current_path, exist_ok=True)
 
-    # Create junk files
-    for _ in range(FILES_PER_DIR):
-        file_name = f"{random_string()}.txt"
-        with open(os.path.join(current_path, file_name), "w") as f:
-            f.write(f"Nothing here but junk data: {random_string(20)}")
+    # # Create junk files
+    # for _ in range(FILES_PER_DIR):
+    #     file_name = f"{random_string()}.txt"
+    #     with open(os.path.join(current_path, file_name), "w") as f:
+    #         f.write(f"Nothing here but junk data: {random_string(20)}")
 
     for _ in range(BREADTH):
         sub_dir = random_string(6)

@@ -1,9 +1,11 @@
-Title: Needle in a haystack
+Title: Needle in a bigger haystack
 
-Points: easy 
+Points: medium
 
 Description: Whoops! I dropped my flag in a haystack :( Pls help me find it :)
 
-Flag: CTF{y0u_f0und_th3_n33dl3}
+Flag: VOSSCTF{y0u_4r3_r3411y_g00d_4t_f1nd1ng_n33d135}
 
 Author: Lukas Justin Borge
+
+ find challenge_files/ -type f -exec cat {} ';' | grep VOSSCTF
