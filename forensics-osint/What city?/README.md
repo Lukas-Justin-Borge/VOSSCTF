@@ -2,7 +2,9 @@ Title:What port?
 
 Points: medium?
 
-Description: Dette bildet ble tatt på 16.03.2026 klokken 10:52 lokal tid. I hvilken by ligger denne porten? Flaggformat = VOSSCTF{*navn på byen*} Hint: Se nøye på hele bildet ;)
+Description: This picture was taken on 16.03.2026 at 10:52 local time. What town is the picture taken in?
+
+Flag format: VOSSCTF{*town*} 
 
 Flag: VOSSCTF{funchal}
 
