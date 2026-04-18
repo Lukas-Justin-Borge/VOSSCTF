@@ -1,0 +1,22 @@
+ctf.lukasjustinborge.com {
+	reverse_proxy ctfd:8000
+}
+
+challenges.lukasjustinborge.com {
+	# All requests (*) redirect to /var/www/html/*
+	# For example: challenges.lukasjustinborge.com/task1/index.html redirects
+	# to: /var/www/html/task1/index.html
+	root * /var/www/html
+
+	# Looks for /index.php
+	# if there is a .php file, it is forwarded to the challenge-php container 
+	# port 9000. Both the caddy container and the php container have the 
+	# /web_challenges folder mounted to /var/www/html as readonly,
+	# so Caddy sends the file path to the php script it wants executed to
+	# the php container.
+	php_fastcgi challenge-php:9000
+
+	# If the file is not handled by php_fastcgi, the file is served statically.
+	file_server
+
+}

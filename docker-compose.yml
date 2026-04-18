@@ -1,0 +1,113 @@
+services:
+  ctfd:
+    build: .
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=d7f9a1c8fc9c146bdc77d6f6330dfcb3
+      - UPLOAD_FOLDER=/var/uploads
+      - DATABASE_URL=mysql+pymysql://ctfd:ctfd@db/ctfd
+      - REDIS_URL=redis://cache:6379
+      - WORKERS=1
+      - LOG_FOLDER=/var/log/CTFd
+      - ACCESS_LOG=-
+      - ERROR_LOG=-
+      - REVERSE_PROXY=true
+    volumes:
+      - .data/CTFd/logs:/var/log/CTFd
+      - .data/CTFd/uploads:/var/uploads
+      - .:/opt/CTFd:ro
+    depends_on:
+      permissions:
+        condition: service_completed_successfully
+      db:
+        condition: service_started
+      cache:
+        condition: service_started
+    networks:
+        - default
+        - internal
+
+  # TODO: CTFd 4.0 Migrate to named volumes. Users will likely need to manually migrate existing files
+  permissions:
+    image: alpine:3.23
+    user: root
+    volumes:
+      - .data/CTFd/logs:/var/log/CTFd
+      - .data/CTFd/uploads:/var/uploads
+    command: chown -R 1001:1001 /var/uploads /var/log/CTFd
+
+  caddy:
+    image: caddy:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./web_challenges:/var/www/html:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - ctfd
+    networks:
+      - default
+
+  challenge-php:
+    build:
+      context: .
+      dockerfile: PHP.Dockerfile   
+    restart: always
+    volumes:
+      - ./web_challenges:/var/www/html:ro
+    networks:
+      - default
+      - sqli-net
+
+  db:
+    image: mariadb:10.11
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=ctfd
+      - MARIADB_USER=ctfd
+      - MARIADB_PASSWORD=ctfd
+      - MARIADB_DATABASE=ctfd
+      - MARIADB_AUTO_UPGRADE=1
+    volumes:
+      - .data/mysql:/var/lib/mysql
+    networks:
+      - internal
+    # This command is required to set important mariadb defaults
+    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
+
+  cache:
+    image: redis:4
+    restart: always
+    volumes:
+    - .data/redis:/data
+    networks:
+      - internal
+  
+  sqli-db:
+    image: mariadb:10.11
+    environment: 
+      - MARIADB_ROOT_PASSWORD=root_pass
+      - MARIADB_DATABASE=challenge_db
+      - MARIADB_USER=ctf
+      - MARIADB_PASSWORD=ctf
+    volumes:
+      - ./web_challenges/sqli/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - sqli-net
+
+networks:
+  default:
+  internal:
+    internal: true
+  sqli-net:
+    internal: true
+
+volumes:
+  caddy_data:
+  caddy_config:
